@@ -1,0 +1,17 @@
+
+services:
+  oracle-db:
+    image: doctorkirk/oracle-19c
+    container_name: oracle-db-container
+    environment:
+        - ORACLE_SID=XE
+        - ORACLE_PDB=XEPDB1
+        - ORACLE_PWD=oracle
+        - ORACLE_CHARACTERSET=AL32UTF8
+    ports:
+      - "1521:1521"
+    volumes:
+      - oracle-db-data:/opt/oracle/oradata
+
+volumes:
+    oracle-db-data:
