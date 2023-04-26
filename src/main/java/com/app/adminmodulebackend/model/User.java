@@ -4,7 +4,7 @@ import jakarta.persistence.*;
 import lombok.Data;
 
 @Entity
-@Table(name = "user")
+@Table(name = "app_user")
 @Data
 public class User {
 
@@ -21,12 +21,13 @@ public class User {
     @Column(name = "name", nullable = false,length = 90)
     private String name;
 
-    @Column(name = "email", nullable = false,length = 60)
+    @Column(name = "email", nullable = false,length = 60,unique = true)
     private String email;
 
     @Column(name = "password", nullable = false)
     private String password;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "role_id", nullable = false, referencedColumnName = "id")
     private Role role;
 }

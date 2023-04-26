@@ -8,6 +8,7 @@ import com.app.adminmodulebackend.exception.UserNotFoundException;
 import com.app.adminmodulebackend.model.Role;
 import com.app.adminmodulebackend.model.User;
 import com.app.adminmodulebackend.service.IUserService;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -17,9 +18,11 @@ import java.util.stream.Collectors;
 public class UserServiceImpl implements IUserService {
 
     private IUserDAO userDAO;
+    private final PasswordEncoder passwordEncoder;
 
-    public UserServiceImpl(IUserDAO userDAO) {
+    public UserServiceImpl(IUserDAO userDAO, PasswordEncoder passwordEncoder) {
         this.userDAO = userDAO;
+        this.passwordEncoder = passwordEncoder;
     }
 
     @Override
@@ -72,7 +75,7 @@ public class UserServiceImpl implements IUserService {
         User user = new User();
         user.setName(userRequest.name());
         user.setEmail(userRequest.email());
-        user.setPassword(userRequest.password());
+        user.setPassword(passwordEncoder.encode(userRequest.password()));
         user.setRole(new Role(userRequest.roleId()));
         return user;
     }

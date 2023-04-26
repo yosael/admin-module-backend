@@ -1,20 +1,24 @@
 package com.app.adminmodulebackend.controller;
 
+import com.app.adminmodulebackend.dao.ITokenDAO;
 import com.app.adminmodulebackend.dto.UserRequest;
 import com.app.adminmodulebackend.dto.UserResponse;
 import com.app.adminmodulebackend.exception.UserNotFoundException;
 import com.app.adminmodulebackend.service.IUserService;
+import jakarta.transaction.Transactional;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/users")
+@RequestMapping("/v1/users")
 public class UserController {
 
     private final IUserService userService;
+    private final ITokenDAO tokenDAO;
 
-    public UserController(IUserService userService){
+    public UserController(IUserService userService, ITokenDAO tokenDAO){
         this.userService = userService;
+        this.tokenDAO = tokenDAO;
     }
 
     @GetMapping
@@ -40,8 +44,10 @@ public class UserController {
         return ResponseEntity.ok(userResponse);
     }
 
+    @Transactional
     @DeleteMapping("/{id}")
     public ResponseEntity<?> deleteUser(@PathVariable Integer id){
+        tokenDAO.deleteAllByUserId(id);
         userService.deleteUser(id);
         return ResponseEntity.ok("User deleted successfully");
     }
